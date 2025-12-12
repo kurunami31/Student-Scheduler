@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySync - Student Scheduler</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo" id="app-logo">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>StudySync</span>
+                </a>
+
+                <ul class="nav-links">
+                    <li><a href="#" data-page="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" data-page="schedule"><i class="fas fa-calendar"></i> Schedule</a></li>
+                    <li><a href="#" data-page="reminders"><i class="fas fa-bell"></i> Reminders</a></li>
+                    <li><a href="#" data-page="profile"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="#" data-page="about"><i class="fas fa-info-circle"></i> About Us</a></li>
+                </ul>
+
+                <div class="user-menu">
+                    <div class="dropdown" id="user-dropdown">
+                        <div class="user-avatar" id="user-avatar">GS</div>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item" data-page="profile"><i class="fas fa-user"></i>
+                                Profile</a>
+                            <a href="#" class="dropdown-item" data-page="settings"><i class="fas fa-cog"></i>
+                                Settings</a>
+                            <a href="#" class="dropdown-item" data-page="about"><i class="fas fa-info-circle"></i>
+                                About Us</a>
+                            <hr>
+                            <a href="#" class="dropdown-item" id="logout-btn"><i class="fas fa-sign-out-alt"></i>
+                                Logout</a>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop playsinline>
+            <source src="Background.mp4" type="video/mp4">
+            <!-- Fallback image if video doesn't load -->
+            <img src="assets/background-fallback.jpg" alt="Background">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="container main-content" id="main-content">
+        <!-- Pages will be loaded here -->
+    </main>
+
+    <!-- Templates -->
+    <script type="text/template" id="dashboard-template">
+        <div class="page" id="dashboard-page">
+            <h1 class="page-title">Dashboard</h1>
+            <p>Welcome to StudySync, <span id="welcome-user">Guest</span>! Here's your study overview.</p>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Today's Schedule</h3>
+                        <button class="btn btn-primary btn-small" id="add-schedule-btn">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                    <div id="today-schedule-list"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Upcoming Reminders</h3>
+                        <button class="btn btn-secondary btn-small" id="add-reminder-btn">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                    <div id="upcoming-reminders-list"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Quick Stats</h3>
+                    </div>
+                    <div id="quick-stats"></div>
+                </div>
+            </div>
+            
+            <!-- Motivational Quote -->
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-quote-left"></i> Daily Inspiration</h3>
+                </div>
+                <div class="card-body">
+                    <p id="daily-quote">"The secret of getting ahead is getting started." - Mark Twain</p>
+                    <button class="btn btn-outline btn-small" id="new-quote-btn">
+                        <i class="fas fa-redo"></i> New Quote
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Study Timer -->
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-clock"></i> Study Timer</h3>
+                </div>
+                <div class="card-body">
+                    <div class="timer-container">
+                        <div class="timer-display" id="timer-display">25:00</div>
+                        <div class="timer-buttons">
+                            <button class="btn btn-primary" id="start-timer-btn">
+                                <i class="fas fa-play"></i> Start
+                            </button>
+                            <button class="btn btn-outline" id="pause-timer-btn" disabled>
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                            <button class="btn btn-danger" id="reset-timer-btn">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                        </div>
+                        <div class="timer-presets">
+                            <button class="btn-preset" data-minutes="25">Pomodoro (25min)</button>
+                            <button class="btn-preset" data-minutes="15">Short Break (15min)</button>
+                            <button class="btn-preset" data-minutes="30">Long Break (30min)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="schedule-template">
+        <div class="page" id="schedule-page">
+            <h1 class="page-title">My Schedule</h1>
+            
+            <div class="tabs">
+                <button class="tab active" data-tab="daily">Daily</button>
+                <button class="tab" data-tab="weekly">Weekly</button>
+                <button class="tab" data-tab="monthly">Monthly</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">All Scheduled Items</h3>
+                    <button class="btn btn-primary" id="add-schedule-full-btn">
+                        <i class="fas fa-plus"></i> New Schedule
+                    </button>
+                </div>
+                <div id="full-schedule-list"></div>
+            </div>
+            
+            <!-- Calendar View -->
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-calendar-alt"></i> Calendar View</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mini-calendar" id="mini-calendar"></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="reminders-template">
+        <div class="page" id="reminders-page">
+            <h1 class="page-title">My Reminders</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">All Reminders</h3>
+                    <button class="btn btn-secondary" id="add-reminder-full-btn">
+                        <i class="fas fa-plus"></i> New Reminder
+                    </button>
+                </div>
+                <div id="full-reminders-list"></div>
+            </div>
+            
+            <!-- Priority Overview -->
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-pie"></i> Priority Overview</h3>
+                </div>
+                <div class="card-body">
+                    <div class="priority-chart" id="priority-chart"></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="profile-template">
+        <div class="page" id="profile-page">
+            <h1 class="page-title">My Profile</h1>
+            
+            <div class="profile-container">
+                <div class="profile-sidebar">
+                    <div class="profile-picture-container">
+                        <div class="profile-avatar" id="profile-avatar-large">
+                            <!-- Profile picture or initials will be shown here -->
+                        </div>
+                        <div class="profile-picture-actions">
+                            <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+                            <button class="btn btn-outline btn-small" id="upload-picture-btn">
+                                <i class="fas fa-camera"></i> Upload Photo
+                            </button>
+                            <button class="btn btn-outline btn-small btn-danger" id="remove-picture-btn">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                    <h2 class="profile-name" id="profile-name">Guest Student</h2>
+                    <p class="profile-email" id="profile-email">guest@example.com</p>
+                    <p><span class="status-badge status-active">Active Student</span></p>
+                    <button class="btn btn-outline" style="margin-top: 20px;" id="edit-profile-btn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+                
+                <div class="profile-content">
+                    <div class="card">
+                        <h3 class="card-title">Account Information</h3>
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <p id="profile-fullname">Guest Student</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <p id="profile-email-text">guest@example.com</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Student ID</label>
+                            <p id="profile-student-id">STU000001</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Major</label>
+                            <p id="profile-major">Not specified</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-top: 25px;">
+                        <h3 class="card-title">Preferences</h3>
+                        <div class="form-group">
+                            <label>Notification Settings</label>
+                            <p><i class="fas fa-bell" style="color: var(--primary);"></i> Email & In-app notifications enabled</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Default View</label>
+                            <p>Weekly Schedule</p>
+                        </div>
+                        <button class="btn btn-outline" id="preferences-btn">
+                            <i class="fas fa-cog"></i> Update Preferences
+                        </button>
+                    </div>
+                    
+                    <!-- Study Statistics -->
+                    <div class="card" style="margin-top: 25px;">
+                        <h3 class="card-title"><i class="fas fa-chart-line"></i> Study Statistics</h3>
+                        <div class="study-stats">
+                            <div class="stat-item">
+                                <div class="stat-value" id="total-study-hours">0</div>
+                                <div class="stat-label">Total Study Hours</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="tasks-completed">0</div>
+                                <div class="stat-label">Tasks Completed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="current-streak">0</div>
+                                <div class="stat-label">Day Streak</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="about-template">
+        <div class="page" id="about-page">
+            <h1 class="page-title">About StudySync</h1>
+            
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h2>Welcome to StudySync</h2>
+                    <p class="hero-description">
+                        StudySync is your all-in-one student scheduling companion designed to keep you organized, focused, and stress-free. Whether you're managing class schedules, upcoming deadlines, or personal workloads, StudySync helps you stay on top of everything with ease. No more missed tasks or last-minute cramming—our intuitive tools remind you of what matters, right when you need them.
+                    </p>
+                    <p class="hero-description">
+                        With StudySync, your academic life becomes simpler, smarter, and perfectly synced.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid" style="margin-top: 30px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Our Mission</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>To empower students worldwide with tools that enhance productivity, reduce stress, and promote academic success through intelligent scheduling and time management.</p>
+                        <div class="mission-stats">
+                            <div class="mission-stat">
+                                <i class="fas fa-users"></i>
+                                <div class="mission-stat-value">10,000+</div>
+                                <div class="mission-stat-label">Students Helped</div>
+                            </div>
+                            <div class="mission-stat">
+                                <i class="fas fa-tasks"></i>
+                                <div class="mission-stat-value">500,000+</div>
+                                <div class="mission-stat-label">Tasks Managed</div>
+                            </div>
+                            <div class="mission-stat">
+                                <i class="fas fa-clock"></i>
+                                <div class="mission-stat-value">1M+</div>
+                                <div class="mission-stat-label">Hours Saved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Features</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <i class="fas fa-calendar-check" style="color: #4361ee;"></i>
+                                <div>
+                                    <h4>Smart Scheduling</h4>
+                                    <p>Organize classes, assignments, and personal tasks in one place</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-bell" style="color: #ff9f1c;"></i>
+                                <div>
+                                    <h4>Smart Reminders</h4>
+                                    <p>Never miss deadlines with customizable notifications</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-chart-pie" style="color: #2ec4b6;"></i>
+                                <div>
+                                    <h4>Progress Tracking</h4>
+                                    <p>Monitor your study habits and academic progress</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-clock" style="color: #9d4edd;"></i>
+                                <div>
+                                    <h4>Study Timer</h4>
+                                    <p>Pomodoro timer to boost focus and productivity</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Development Team</h3>
+                    </div>
+                    <div class="developers-list">
+                        <div class="developer-item">
+                            <div class="developer-avatar">
+                                <img src="Christopher.jpg" alt="Christopher Lyod B. Mercado">
+                            </div>
+                        <div class="developer-info">
+                            <h4>Christopher Lyod B. Mercado</h4>
+                            <p class="developer-role">Head Developer</p>
+                            <p class="developer-skills">HTML, CSS, JavaScript</p>
+                        </div>
+                    </div>
+                        <div class="developer-item">
+                        <div class="developer-avatar">
+                        <img src="Kenth.jpg" alt="Kenth Justine B. Sumalinab">
+                    </div>
+                <div class="developer-info">
+                    <h4>Kenth Justine B. Sumalinab</h4>
+                    <p class="developer-role">Assistant Head, Frontend Developer</p>
+                    <p class="developer-skills">Frontend, CSS</p>
+                    </div>
+                </div>
+                <div class="developer-item">
+                    <div class="developer-avatar">
+                    <img src="Maria.jpg" alt="Maria Stefanie Celine A. Dela Salde">
+                </div>
+                <div class="developer-info">
+                    <h4>Maria Stefanie Celine A. Dela Salde</h4>
+                    <p class="developer-role">UI/UX Designer</p>
+                    <p class="developer-skills">Visual Design, User Research</p>
+                </div>
+                    </div>
+                        <div class="developer-item">
+                            <div class="developer-avatar">
+                                <img src="Frankie.jpg" alt="Frankie Dhon M. Pelayo">
+                            </div>
+                            <div class="developer-info">
+                                <h4>Frankie Dhon M. Pelayo</h4>
+                                <p class="developer-role">UI/UX Designer</p>
+                                <p class="developer-skills">User Interface, User Experience</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3 class="card-title">GitHub Repository</h3>
+                </div>
+                <div class="card-body">
+                    <p>StudySync is an open-source project. You can contribute to its development on GitHub.</p>
+                    <div style="margin: 20px 0;">
+                        <a href="https://github.com/kurunami31/Student-Scheduler" class="btn btn-outline" target="_blank" style="width: 100%;">
+                            <i class="fab fa-github"></i> View on GitHub
+                        </a>
+                    </div>
+                    <div class="github-stats">
+                        <div class="stat">
+                            <i class="fas fa-star" style="color: #ffd700;"></i>
+                            <span>124 Stars</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-code-branch" style="color: #4361ee;"></i>
+                            <span>45 Forks</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-exclamation-circle" style="color: #ff9800;"></i>
+                            <span>12 Issues</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3 class="card-title">Technologies Used</h3>
+                </div>
+                <div class="technologies-list">
+                    <div class="tech-item">
+                        <i class="fab fa-html5" style="color: #e34f26;"></i>
+                        <span>HTML5</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fab fa-css3-alt" style="color: #1572b6;"></i>
+                        <span>CSS3</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fab fa-js" style="color: #f7df1e;"></i>
+                        <span>JavaScript</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fab fa-font-awesome" style="color: #528dd7;"></i>
+                        <span>Font Awesome</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fab fa-google" style="color: #4285f4;"></i>
+                        <span>Google Fonts</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-database" style="color: #4CAF50;"></i>
+                        <span>LocalStorage</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 30px; margin-bottom: 50px;">
+                <div class="card-header">
+                    <h3 class="card-title">Contact Us</h3>
+                </div>
+                <div class="card-body">
+                    <p>Have questions, suggestions, or want to contribute? Reach out to our team:</p>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> contact@studysync.app</p>
+                        <p><i class="fab fa-discord"></i> <strong>Discord:</strong> discord.gg/studysync</p>
+                        <p><i class="fab fa-twitter"></i> <strong>Twitter:</strong> @StudySyncApp</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-primary" id="feedback-btn">
+                            <i class="fas fa-comment"></i> Send Feedback
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="login-template">
+    <div class="page" id="login-page">
+        <div class="auth-container">
+            <h2 style="text-align: center; color: var(--secondary); margin-bottom: 10px;">Welcome to StudySync</h2>
+            <p style="text-align: center; color: var(--gray); margin-bottom: 30px;">Sign in to your StudySync account</p>
+            
+            <div class="auth-options">
+                <button class="auth-btn" id="google-auth">
+                    <i class="fab fa-google" style="color: #DB4437;"></i> Google
+                </button>
+                <button class="auth-btn" id="facebook-auth">
+                    <i class="fab fa-facebook-f" style="color: #1877F2;"></i> Facebook
+                </button>
+                <button class="auth-btn" id="github-auth">
+                    <i class="fab fa-github" style="color: #333;"></i> GitHub
+                </button>
+                <button class="auth-btn" id="microsoft-auth">
+                    <i class="fab fa-microsoft" style="color: #00A4EF;"></i> Microsoft
+                </button>
+            </div>
+            
+            <div class="auth-divider">
+                <span style="background-color: white; padding: 0 10px;">or</span>
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="student@university.edu" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="#" id="forgot-password" style="color: var(--primary); text-decoration: none;">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 25px;">
+                Don't have an account? <a href="#" id="show-signup" style="color: var(--primary); text-decoration: none; font-weight: 500;">Sign Up</a>
+            </p>
+        </div>
+    </div>
+</script>
+
+    <script type="text/template" id="signup-template">
+    <div class="page" id="signup-page">
+        <div class="auth-container">
+            <h2 style="text-align: center; color: var(--secondary); margin-bottom: 10px;">Create Account</h2>
+            <p style="text-align: center; color: var(--gray); margin-bottom: 30px;">Join thousands of students using StudySync</p>
+            
+            <div class="auth-options">
+                <button class="auth-btn" id="google-auth-signup">
+                    <i class="fab fa-google" style="color: #DB4437;"></i> Google
+                </button>
+                <button class="auth-btn" id="facebook-auth-signup">
+                    <i class="fab fa-facebook-f" style="color: #1877F2;"></i> Facebook
+                </button>
+                <button class="auth-btn" id="github-auth-signup">
+                    <i class="fab fa-github" style="color: #333;"></i> GitHub
+                </button>
+                <button class="auth-btn" id="microsoft-auth-signup">
+                    <i class="fab fa-microsoft" style="color: #00A4EF;"></i> Microsoft
+                </button>
+            </div>
+            
+            <div class="auth-divider">
+                <span style="background-color: white; padding: 0 10px;">or</span>
+            </div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" class="form-control" placeholder="John Smith" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" class="form-control" placeholder="student@university.edu" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" class="form-control" placeholder="Create a strong password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <input type="password" id="signup-confirm-password" class="form-control" placeholder="Re-enter your password" required>
+                </div>
+                <div class="form-group" style="display: flex; align-items: flex-start; gap: 10px;">
+                    <input type="checkbox" id="terms" style="margin-top: 5px;" required>
+                    <label for="terms" style="font-size: 0.9rem;">I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a> and <a href="#" style="color: var(--primary);">Privacy Policy</a></label>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 25px;">
+                Already have an account? <a href="#" id="show-login" style="color: var(--primary); text-decoration: none; font-weight: 500;">Sign In</a>
+            </p>
+        </div>
+    </div>
+</script>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>
